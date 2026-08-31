@@ -22,7 +22,7 @@ The original production version:
 
 ## Preview
 
-<p align="center">
+<p align="left">
   <img src="preview.jpg" width="500">
 </p>
 
