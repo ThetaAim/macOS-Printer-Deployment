@@ -22,7 +22,7 @@ The original production version:
 
 ## Preview
 
-![Pistol Printer Installer](images/pistol-demo.png)
+![Pistol Printer Installer](preview.jpg)
 
 ---
 
