@@ -20,6 +20,12 @@ The original production version:
 
 ---
 
+## Preview
+
+![Pistol Printer Installer](images/pistol-demo.png)
+
+---
+
 ## Workflow
 
 ```text
