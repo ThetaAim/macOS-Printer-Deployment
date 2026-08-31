@@ -1,28 +1,29 @@
 # Pistol — Printer Installer
 
-> A one-click macOS utility that silently installs, configures, and presets an entire print fleet for end users.
+> **One click from a clean Mac to a ready-to-print workstation.**
+
+Pistol is a macOS printer-deployment utility built to automate the complete workstation printing setup in one workflow.
+
+The original production version:
+
+- installs all required printer drivers;
+- creates and registers the printers in macOS;
+- points each printer to the correct network print-server queue;
+- applies model-specific PPD and hardware settings to match the physical printer configuration, including trays, paper sizes, media types, paper weights, finishers, and other options;
+- installs the Gespage Popup client automatically using the appropriate 32-bit or 64-bit package;
+- deploys the required print presets;
+- leaves the Mac ready for printing when the process completes.
+
+All of this is handled through a single Tkinter-based workflow with visible progress output.
 
 > **Portfolio Demo Notice**  
 > This public repository is a non-operational demonstration of the original production tool.  
-> The original project performs the full printer deployment workflow described below, including package installation, printer creation, preset deployment, and privileged macOS automation.  
-> In this public version, all system-changing actions have been replaced with simulated output, and all production-specific configuration, credentials, installers, and environment details have been removed.
+> The original project performs the full deployment workflow described above.  
+> In this public version, all system-changing actions have been replaced with simulated output, and all production-specific configuration, credentials, installers, vendor packages, and environment details have been removed.
 
 ---
 
 ## What It Does
-
-The original Pistol project automates the full printer deployment workflow on macOS:
-
-1. **Installs all driver packages** (`.pkg`) using AppleScript with elevated privileges.
-2. **Creates and registers printers** via `lpadmin`, applying model-specific PPDs, queue definitions, and printer options.
-3. **Copies print presets** directly into the user's macOS preferences, so printers are ready with the correct paper, tray, and finishing defaults out of the box.
-4. Presents the full deployment process through a simple **Tkinter GUI** with visible progress output.
-
-The public portfolio version preserves this workflow and project structure, but displays the actions that would be executed instead of modifying the system.
-
----
-
-## Deployment Workflow
 
 The production version follows this sequence:
 
@@ -30,25 +31,31 @@ The production version follows this sequence:
 Launch application
         |
         v
-Read printer and package configuration
+Read package and printer configuration
         |
         v
-Install required packages
+Install printer drivers
         |
         v
-Register network printers with CUPS / lpadmin
+Install Gespage Popup (32-bit or 64-bit)
         |
         v
-Apply PPD and hardware-specific options
+Create printers in macOS
         |
         v
-Deploy macOS print presets
+Connect printers to print-server queues
         |
         v
-Installation complete
+Apply PPD / physical printer configuration
+        |
+        v
+Deploy print presets
+        |
+        v
+Ready to print
 ```
 
-In the public demo, the same sequence is simulated and displayed in the application log.
+The public portfolio version preserves the same workflow and project structure, but displays the actions that would be executed instead of modifying the system.
 
 ---
 
@@ -61,7 +68,7 @@ Pistol/
 │   └── Data.py              # Generic package and printer configuration
 ├── Scripts/
 │   ├── Installer/
-│   │   └── tk_installer.py  # Package-installation workflow
+│   │   └── tk_installer.py  # Driver / client installation workflow
 │   ├── Printers/
 │   │   └── Create_printer_with_settings.py
 │   │                         # CUPS / lpadmin printer configuration
@@ -80,44 +87,83 @@ Pistol/
 
 ---
 
-## How It Works
+## How the Production Version Works
 
-### 1. Launch
+### 1. Driver Installation
 
-The application opens directly to the deployment interface.
+The application installs the required printer driver packages on macOS using AppleScript and administrator privileges.
 
-In the original version, macOS requests administrator approval when privileged package installation begins.
+The workflow is designed so the required drivers are installed as part of the same deployment process rather than manually installing each package.
 
-In the public demo, no administrator privileges are requested.
+### 2. Gespage Popup Installation
 
-### 2. Package Installation
+The production version installs the Gespage Popup client automatically.
 
-The original application processes the required installation packages through a shared workflow using AppleScript and macOS administrator privileges.
+The required package version can be selected according to the target environment, allowing deployment of either the 32-bit or 64-bit package as part of the same one-click workflow.
 
-Package execution output is written to the application log so the user can follow the deployment process.
+### 3. Printer Creation and Print-Server Routing
 
-The public demo builds and displays the commands that would normally be executed, but does not run them.
+After the required packages are installed, the project creates each configured printer using CUPS / `lpadmin`.
 
-### 3. Printer Creation
+For every printer, the workflow defines:
 
-After the required packages are installed, the original project creates each configured printer using CUPS / `lpadmin`.
+- printer display name;
+- network print-server address;
+- queue name;
+- PPD file;
+- location;
+- printer-specific hardware options.
 
-For every printer, the workflow applies:
+This allows the Mac to communicate with the correct print-server queue rather than requiring each printer to be configured manually.
 
-- A display name
-- A network queue
-- A print-server address
-- A PPD file
-- A location
-- Optional model-specific settings such as trays, drawers, finishers, or other PPD options
+### 4. Physical Printer Configuration
 
-The public demo generates and displays the equivalent commands without registering any printers.
+The production version applies model-specific PPD settings so the macOS printer definition matches the actual physical device.
 
-### 4. Preset Deployment
+Depending on the printer, these settings can include:
 
-The original project deploys macOS print preset files into the user's preferences so predefined print settings are immediately available.
+- paper trays;
+- paper sizes;
+- media types;
+- paper weights;
+- drawers;
+- finishers;
+- binders;
+- other model-specific hardware options.
 
-The public demo displays the source and destination paths that would be used, but does not copy or modify any files.
+The goal is for the printer to appear correctly configured to the user immediately after deployment.
+
+### 5. Preset Deployment
+
+Required macOS print presets are deployed automatically so commonly used print configurations are available without additional manual setup.
+
+### 6. Ready to Use
+
+After the workflow completes, the Mac has:
+
+- required printer drivers;
+- configured printer queues;
+- print-server routing;
+- physical printer options;
+- Gespage Popup;
+- print presets.
+
+The workstation is ready for printing without requiring the user to manually configure each component.
+
+---
+
+## Portfolio Demo Behavior
+
+The public version demonstrates the same flow without executing privileged or system-changing commands.
+
+It:
+
+1. Reads generic package and printer definitions from `Data/Data.py`.
+2. Displays the package installation actions that would normally be performed.
+3. Builds and displays the CUPS / `lpadmin` commands for each printer.
+4. Displays the printer configuration and print-server routing.
+5. Displays the source and destination of preset deployment.
+6. Shows the complete simulated workflow in the Tkinter interface.
 
 ---
 
@@ -131,8 +177,8 @@ Examples include:
 - Generic printer names
 - Generic queue names
 - Generic PPD paths
-- Generic location values
-- Example option keys and values
+- Generic locations
+- Example PPD option keys and values
 - Generic local package paths
 
 No production IP addresses, hostnames, queue names, credentials, vendor installers, organization names, or environment-specific configuration are included.
@@ -148,8 +194,8 @@ No production IP addresses, hostnames, queue names, credentials, vendor installe
 | macOS automation | AppleScript / `osascript` |
 | Printer management | CUPS / `lpadmin` |
 | Printer configuration | PPD options |
+| Deployment model | Configuration-driven automation |
 | Preset deployment | macOS preference files |
-| Automation model | Configuration-driven deployment |
 
 ---
 
@@ -169,7 +215,7 @@ python3 main.py
 
 Click **Start Installation** to view the simulated deployment workflow.
 
-The demo displays the actions and commands that would be executed by the original production version, but does not perform any system changes.
+The displayed actions and commands are informational only and are never executed.
 
 ---
 
@@ -177,14 +223,14 @@ The demo displays the actions and commands that would be executed by the origina
 
 This public portfolio version does **not**:
 
-- Install packages
-- Execute `osascript`
-- Execute `lpadmin`
-- Register printers
-- Copy presets
-- Change file ownership or permissions
-- Request administrator privileges
-- Modify the host system
+- install packages;
+- execute `osascript`;
+- execute `lpadmin`;
+- register printers;
+- copy presets;
+- change ownership or permissions;
+- request administrator privileges;
+- modify the host system.
 
 Files placed under `pkgs/` are ignored by Git except for placeholder `.gitkeep` files.
 
@@ -192,8 +238,8 @@ Files placed under `pkgs/` are ignored by Git except for placeholder `.gitkeep` 
 
 ## Why This Repository Is Non-Operational
 
-The original project was built for use in a real managed macOS environment.
+The original utility was built for a real managed macOS environment.
 
 This public repository intentionally preserves the project structure, configuration model, GUI, workflow, and technical design while removing the operational code paths and production-specific data that would make the tool directly deployable.
 
-The goal is to demonstrate the engineering approach and macOS automation workflow without distributing the complete production implementation.
+Its purpose is to demonstrate the engineering approach, macOS administration knowledge, printer-deployment workflow, and automation design without distributing the complete production implementation.
